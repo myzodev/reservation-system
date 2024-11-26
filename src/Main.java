@@ -2,7 +2,9 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-    public static Scanner scanner;
+    private static Scanner scanner;
+    private static ArrayList<Agency> agencies = new ArrayList<Agency>();
+    private static ArrayList<User> users = new ArrayList<User>();
 
     public static void main(String[] args) {
         initData();
@@ -11,95 +13,77 @@ public class Main {
 
     private static void initData() {
         Agency agency1 = new Agency("Beyond Horizons");
-        Agency agency2 = new Agency("Velvet Voyages");
+        agencies.add(agency1);
 
-        agency1.createTrip("Trip to Paris", "France", 10);
-        agency1.createTrip("Trip to Krakow", "Poland", 12);
+        User user1 = new User("Miro");
+        users.add(user1);
 
-        agency1.createReservation(new User("Miro"), agency1.getAllTrips().getFirst(), 6, false);
+        Trip trip1 = new Trip("Trip to Paris", "France", 10);
+        agency1.addTrip(trip1);
 
-        new User("Stefan");
-        new User("Milan");
+        Reservation reservation1 = new Reservation(user1, agency1.getTrips().getFirst(), 6, false);
+        agency1.addReservation(reservation1);
 
         scanner = new Scanner(System.in);
-    }
-
-    private static int readIntFromUser(int min, int max) {
-        while (true) {
-            try {
-                int input = scanner.nextInt();
-                scanner.nextLine(); // consume newline
-                if (input >= min && input <= max) {
-                    return input;
-                }
-                System.out.println("Please enter a number between " + min + " and " + max + ".");
-            } catch (Exception e) {
-                System.out.println("Invalid input. Please enter a valid number.");
-                scanner.nextLine(); // consume invalid input
-            }
-        }
     }
 
     public static void startApp() {
         boolean isRunning = true;
 
-        while(isRunning) {
-            System.out.println("--[ Choose an action ]--");
-            System.out.println("[1] Agency menu");
-            System.out.println("[2] User menu");
+        while (isRunning) {
+            System.out.println("\n==== Main Menu ====");
+            System.out.println("[1] Agency Menu");
+            System.out.println("[2] User Menu");
             System.out.println("[3] Exit");
+            System.out.print("Please choose an action: ");
 
-            int chosenAction = readIntFromUser(1, 3);
+            int chosenAction = Utils.readIntFromUser(1, 3);
 
             switch (chosenAction) {
                 case 1 -> showAgencyMenu();
                 case 2 -> showUserMenu();
-                case 3 -> isRunning = false;
+                case 3 -> {
+                    System.out.println("Exiting the application. Goodbye!");
+                    isRunning = false;
+                }
             }
         }
     }
 
-    /**
-     * Agency menu
-     */
     public static void showAgencyMenu() {
         boolean showMenu = true;
 
-        while(showMenu) {
-            System.out.println("--[ Choose an action ]--");
-            System.out.println("[1] Create an agency");
-            System.out.println("[2] Choose an agency");
-            System.out.println("[3] Back to main menu");
+        while (showMenu) {
+            System.out.println("\n==== Agency Menu ====");
+            System.out.println("[1] Create an Agency");
+            System.out.println("[2] Choose an Agency");
+            System.out.println("[3] Back to Main Menu");
+            System.out.print("Please choose an action: ");
 
-            int chosenAction = readIntFromUser(1, 3);
+            int chosenAction = Utils.readIntFromUser(1, 3);
 
             switch (chosenAction) {
                 case 1 -> createAgency();
                 case 2 -> chooseAgency();
-                case 3 -> showMenu = false;
+                case 3 -> {
+                    System.out.println("Returning to the Main Menu...");
+                    showMenu = false;
+                }
             }
         }
     }
 
     public static void createAgency() {
-        System.out.println("--[ Name of an agency: ]--");
+        System.out.print("\nEnter the name of the new agency: ");
         String newAgencyName = scanner.nextLine();
-        new Agency(newAgencyName);
+        Agency newAgency = new Agency(newAgencyName);
+        agencies.add(newAgency);
+        System.out.println("Agency \"" + newAgencyName + "\" has been created successfully.");
     }
 
     public static void chooseAgency() {
-        ArrayList<Agency> allAgencies = Agency.getAllAgencies();
-
-        System.out.println("--[ Choose an agency ]--");
-
-        for (int i = 0; i < allAgencies.size(); i++) {
-            System.out.println("[" + (i + 1) + "] " + allAgencies.get(i).getName());
-        }
-
-        int chosenAgencyIndex = scanner.nextInt() - 1;
-        scanner.nextLine();
-
-        Agency chosenAgency = allAgencies.get(chosenAgencyIndex);
+        int chosenAgencyIndex = Utils.renderSelectListAndChoose("Select an Agency", agencies);
+        Agency chosenAgency = agencies.get(chosenAgencyIndex);
 
         showAgencySubmenu(chosenAgency);
     }
@@ -107,143 +91,115 @@ public class Main {
     public static void showAgencySubmenu(Agency chosenAgency) {
         boolean showMenu = true;
 
-        while(showMenu) {
-            System.out.println("--[ Choose an action for " + chosenAgency.getName() + " ]--");
-            System.out.println("[1] Create a reservation");
-            System.out.println("[2] Show reservations");
-            System.out.println("[3] Create a trip");
-            System.out.println("[4] Show trips");
-            System.out.println("[5] Back to agency menu");
+        while (showMenu) {
+            System.out.println("\n==== Agency Submenu: " + chosenAgency.getName() + " ====");
+            System.out.println("[1] Create a Reservation");
+            System.out.println("[2] Show Reservations");
+            System.out.println("[3] Create a Trip");
+            System.out.println("[4] Show Trips");
+            System.out.println("[5] Back to Agency Menu");
+            System.out.print("Please choose an action: ");
 
-            int chosenAction = readIntFromUser(1, 5);
+            int chosenAction = Utils.readIntFromUser(1, 5);
 
             switch (chosenAction) {
                 case 1 -> createAgencyReservation(chosenAgency);
                 case 2 -> showAgencyReservations(chosenAgency);
                 case 3 -> createAgencyTrip(chosenAgency);
                 case 4 -> showAgencyTrips(chosenAgency);
-                case 5 -> showMenu = false;
+                case 5 -> {
+                    System.out.println("Returning to the Agency Menu...");
+                    showMenu = false;
+                }
             }
         }
     }
 
     public static void createAgencyReservation(Agency chosenAgency) {
-        ArrayList<User> allUsers = User.getAllUsers();
-        ArrayList<Trip> allTrips = chosenAgency.getAllTripsWithFreeSeats();
+        ArrayList<Trip> tripsWithFreeSeats = chosenAgency.getTripsWithFreeSeats();
 
-        System.out.println("--[ Choose a user ]--");
+        System.out.println("\n==== Create a Reservation ====");
+        int chosenUserIndex = Utils.renderSelectListAndChoose("Select a User", users);
+        User chosenUser = users.get(chosenUserIndex);
 
-        // Choose a user
-        for (int i = 0; i < allUsers.size(); i++) {
-            System.out.println("[" + (i + 1) + "] " + allUsers.get(i).getName());
-        }
+        int chosenTripIndex = Utils.renderSelectListAndChoose("Select a Trip", tripsWithFreeSeats);
+        Trip chosenTrip = tripsWithFreeSeats.get(chosenTripIndex);
 
-        int chosenUserIndex = scanner.nextInt() - 1;
-        scanner.nextLine();
-
-        User chosenUser = allUsers.get(chosenUserIndex);
-
-        // Choose a trip
-        System.out.println("--[ Choose a trip from " + chosenAgency.getName() + " ]--");
-
-        for (int i = 0; i < allTrips.size(); i++) {
-            System.out.println("[" + (i + 1) + "] " + allTrips.get(i).getName());
-        }
-
-        int chosenTripIndex = scanner.nextInt() - 1;
-        scanner.nextLine();
-
-        Trip chosenTrip = allTrips.get(chosenTripIndex);
-
-        // Choose amount of passengers
-        System.out.println("--[ How many of you are going? (Free seats: " + chosenTrip.getFreeSeats() + " ]--");
-
+        System.out.print("Enter the number of passengers (Free seats: " + chosenTrip.getFreeSeats() + "): ");
         int numberOfPassengers = scanner.nextInt();
         scanner.nextLine();
 
-        // Choose a trip
-        System.out.println("--[ Would you like to pay now? (Y/n) ]--");
+        System.out.print("Would you like to pay now? (Y/n): ");
         String payNow = scanner.nextLine();
+        boolean isReservationPaid = payNow.equalsIgnoreCase("Y");
 
-        boolean isReservationPaid = payNow.equals("Y");
+        Reservation newReservation = new Reservation(chosenUser, chosenTrip, numberOfPassengers, isReservationPaid);
+        chosenAgency.addReservation(newReservation);
 
-        chosenAgency.createReservation(chosenUser, chosenTrip, numberOfPassengers, isReservationPaid);
+        System.out.println("Reservation successfully created for \"" + chosenUser.getName() + "\".");
     }
 
     public static void showAgencyReservations(Agency chosenAgency) {
-        System.out.println("--[ Reservations from " + chosenAgency.getName() + " agency ]--");
-
-        for (Reservation reservation : chosenAgency.getAllReservations()) {
-            System.out.println(reservation);
-        }
+        System.out.println("\n==== Reservations for Agency: " + chosenAgency.getName() + " ====");
+        Utils.renderSelectList("Reservations", chosenAgency.getReservations());
     }
 
     public static void createAgencyTrip(Agency chosenAgency) {
-        // Name
-        System.out.println("--[ Trip name ]--");
+        System.out.print("\nEnter the trip name: ");
         String newTripName = scanner.nextLine();
 
-        // Destination
-        System.out.println("--[ Trip destination ]--");
+        System.out.print("Enter the trip destination: ");
         String newTripDestination = scanner.nextLine();
 
-        // Free seats
-        System.out.println("--[ How many free seats ]--");
+        System.out.print("Enter the number of available seats: ");
         int newTripSeats = scanner.nextInt();
         scanner.nextLine();
 
-        chosenAgency.createTrip(newTripName, newTripDestination, newTripSeats);
+        Trip newTrip = new Trip(newTripName, newTripDestination, newTripSeats);
+        chosenAgency.addTrip(newTrip);
+
+        System.out.println("Trip \"" + newTripName + "\" to " + newTripDestination + " has been created successfully.");
     }
 
     public static void showAgencyTrips(Agency chosenAgency) {
-        System.out.println("--[ Trips from " + chosenAgency.getName() + " agency ]--");
-
-        for (Trip trip : chosenAgency.getAllTrips()) {
-            System.out.println(trip);
-        }
+        System.out.println("\n==== Trips for Agency: " + chosenAgency.getName() + " ====");
+        Utils.renderSelectList("Trips", chosenAgency.getTrips());
     }
 
-    /**
-     * User Menu
-     */
     public static void showUserMenu() {
         boolean showMenu = true;
 
-        while(showMenu) {
-            System.out.println("--[ Choose an action ]--");
-            System.out.println("[1] Create a user");
-            System.out.println("[2] Choose a user");
-            System.out.println("[3] Back to main menu");
+        while (showMenu) {
+            System.out.println("\n==== User Menu ====");
+            System.out.println("[1] Create a User");
+            System.out.println("[2] Choose a User");
+            System.out.println("[3] Back to Main Menu");
+            System.out.print("Please choose an action: ");
 
-            int chosenAction = readIntFromUser(1, 3);
+            int chosenAction = Utils.readIntFromUser(1, 3);
 
             switch (chosenAction) {
                 case 1 -> createUser();
                 case 2 -> chooseUser();
-                case 3 -> showMenu = false;
+                case 3 -> {
+                    System.out.println("Returning to the Main Menu...");
+                    showMenu = false;
+                }
             }
         }
     }
 
     public static void createUser() {
-        System.out.println("--[ User name: ]--");
+        System.out.print("\nEnter the name of the new user: ");
         String newUsername = scanner.nextLine();
-        new User(newUsername);
+        User newUser = new User(newUsername);
+        users.add(newUser);
+        System.out.println("User \"" + newUsername + "\" has been created successfully.");
     }
 
     public static void chooseUser() {
-        ArrayList<User> allUsers = User.getAllUsers();
-
-        System.out.println("--[ Choose a user ]--");
-
-        for (int i = 0; i < allUsers.size(); i++) {
-            System.out.println("[" + (i + 1) + "] " + allUsers.get(i).getName());
-        }
-
-        int chosenUserIndex = scanner.nextInt() - 1;
-        scanner.nextLine();
-
-        User chosenUser = allUsers.get(chosenUserIndex);
+        int chosenUserIndex = Utils.renderSelectListAndChoose("Select a User", users);
+        User chosenUser = users.get(chosenUserIndex);
 
         showUserSubmenu(chosenUser);
     }
@@ -251,59 +207,56 @@ public class Main {
     public static void showUserSubmenu(User chosenUser) {
         boolean showMenu = true;
 
-        while(showMenu) {
-            System.out.println("--[ Choose an action for " + chosenUser.getName() + " ]--");
-            System.out.println("[1] Show reservations");
-            System.out.println("[2] Pay a reservation");
-            System.out.println("[3] Cancel a reservation");
-            System.out.println("[4] Back to user menu");
+        while (showMenu) {
+            System.out.println("\n==== User Submenu: " + chosenUser.getName() + " ====");
+            System.out.println("[1] Show Reservations");
+            System.out.println("[2] Pay a Reservation");
+            System.out.println("[3] Cancel a Reservation");
+            System.out.println("[4] Back to User Menu");
+            System.out.print("Please choose an action: ");
 
-            int chosenAction = readIntFromUser(1, 4);
+            int chosenAction = Utils.readIntFromUser(1, 4);
 
             switch (chosenAction) {
                 case 1 -> showUserReservations(chosenUser);
                 case 2 -> payUserReservations(chosenUser);
                 case 3 -> cancelUserReservations(chosenUser);
-                case 4 -> showMenu = false;
+                case 4 -> {
+                    System.out.println("Returning to the User Menu...");
+                    showMenu = false;
+                }
             }
         }
     }
 
     public static void showUserReservations(User chosenUser) {
+        System.out.println("\n==== Reservations for User: " + chosenUser.getName() + " ====");
         for (Reservation reservation : chosenUser.getReservations()) {
             System.out.println(reservation);
         }
     }
 
     public static void payUserReservations(User chosenUser) {
+        System.out.println("\n==== Pay a Reservation ====");
         ArrayList<Reservation> userReservations = chosenUser.getReservations();
 
-        System.out.println("--[ Choose a reservation you want to pay ]--");
-
-        for (int i = 0; i < userReservations.size(); i++) {
-            System.out.println("[" + (i + 1) + "] " + userReservations.get(i));
-        }
-
-        int chosenReservationIndex = scanner.nextInt() - 1;
-        scanner.nextLine();
-
+        int chosenReservationIndex = Utils.renderSelectListAndChoose("Select a Reservation to Pay", userReservations);
         Reservation chosenReservation = userReservations.get(chosenReservationIndex);
+
         chosenReservation.setPaid(true);
+        System.out.println("Reservation has been marked as paid.");
     }
 
     public static void cancelUserReservations(User chosenUser) {
+        System.out.println("\n==== Cancel a Reservation ====");
         ArrayList<Reservation> userReservations = chosenUser.getReservations();
 
-        System.out.println("--[ Choose a reservation you want to cancel ]--");
-
-        for (int i = 0; i < userReservations.size(); i++) {
-            System.out.println("[" + (i + 1) + "] " + userReservations.get(i));
-        }
-
-        int chosenReservationIndex = scanner.nextInt() - 1;
-        scanner.nextLine();
-
+        int chosenReservationIndex = Utils.renderSelectListAndChoose("Select a Reservation to Cancel", userReservations);
         Reservation chosenReservation = userReservations.get(chosenReservationIndex);
+
+        chosenReservation.getAgency().removeReservation(chosenReservation);
         chosenUser.removeReservation(chosenReservation);
+
+        System.out.println("Reservation has been canceled successfully.");
     }
 }

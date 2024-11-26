@@ -23,6 +23,10 @@ public class Trip {
         this.freeSeats = freeSeats;
     }
 
+    public void increaseFreeSeatsBy(int increaseBy) {
+        freeSeats += increaseBy;
+    }
+
     public void reduceFreeSeatsBy(int reduceBy) {
         freeSeats -= reduceBy;
     }

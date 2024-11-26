@@ -1,4 +1,5 @@
 public class Reservation {
+    private Agency agency;
     private User user;
     private Trip trip;
     private int numberOfPassengers;
@@ -11,6 +12,15 @@ public class Reservation {
         this.isPaid = isPaid;
 
         user.addReservation(this);
+    }
+
+    // Agency
+    public Agency getAgency() {
+        return agency;
+    }
+
+    public void setAgency(Agency agency) {
+        this.agency = agency;
     }
 
     // Trip

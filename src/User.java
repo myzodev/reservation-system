@@ -1,14 +1,11 @@
 import java.util.ArrayList;
 
-public class User {
+public class User implements ReservationHandlers {
     private String name;
     private ArrayList<Reservation> reservations = new ArrayList<Reservation>();
 
-    private static ArrayList<User> users = new ArrayList<User>();
-
     public User(String name) {
         this.name = name;
-        users.add(this);
     }
 
     // Name
@@ -26,24 +23,12 @@ public class User {
     }
 
     public void removeReservation(Reservation reservationToRemove) {
-        reservations.removeIf(reservation -> {
-            if (reservation == reservationToRemove) {
-                Trip correspondingTrip = reservation.getTrip();
-                correspondingTrip.setFreeSeats(correspondingTrip.getFreeSeats() + reservation.getNumberOfPassengers());
-                return true;
-            }
-
-            return false;
-        });
+        reservations.removeIf(reservation -> reservation == reservationToRemove);
     }
 
     // Other
     @Override
     public String toString() {
         return name;
-    }
-
-    public static ArrayList<User> getAllUsers() {
-        return users;
     }
 }
