@@ -36,4 +36,14 @@ public class Utils {
 
         return chosenIndex;
     }
+
+    public static boolean userExistsWithEmail(String emailToCheck, ArrayList<User> users) {
+        for (User user : users) {
+            if (user.getEmail().equals(emailToCheck)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

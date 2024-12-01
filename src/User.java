@@ -2,15 +2,24 @@ import java.util.ArrayList;
 
 public class User implements ReservationHandlers {
     private String name;
+    private String email;
+    private String phone;
     private ArrayList<Reservation> reservations = new ArrayList<Reservation>();
 
-    public User(String name) {
+    public User(String name, String email, String phone) {
         this.name = name;
+        this.email = email;
+        this.phone = phone;
     }
 
     // Name
     public String getName() {
         return name;
+    }
+
+    // Email
+    public String getEmail() {
+        return email;
     }
 
     // Reservations
@@ -29,6 +38,6 @@ public class User implements ReservationHandlers {
     // Other
     @Override
     public String toString() {
-        return name;
+        return name + ", " + email + ", " + phone;
     }
 }

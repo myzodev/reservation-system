@@ -15,7 +15,7 @@ public class Main {
         Agency agency1 = new Agency("Beyond Horizons");
         agencies.add(agency1);
 
-        User user1 = new User("Miro");
+        User user1 = new User("Miro", "miro@email.com", "+421 000 000");
         users.add(user1);
 
         Trip trip1 = new Trip("Trip to Paris", "France", 10);
@@ -192,7 +192,23 @@ public class Main {
     public static void createUser() {
         System.out.print("\nEnter the name of the new user: ");
         String newUsername = scanner.nextLine();
-        User newUser = new User(newUsername);
+
+        System.out.print("\nEnter the email of the new user: ");
+        String newUserEmail = scanner.nextLine();
+
+        boolean userExists = Utils.userExistsWithEmail(newUserEmail, users);
+
+        while (userExists) {
+            System.out.print("\nUser with this email already exists, try a different one: ");
+            String newUserEmailUnique = scanner.nextLine();
+
+            userExists = Utils.userExistsWithEmail(newUserEmailUnique, users);
+        }
+
+        System.out.print("\nEnter the phone number of the new user: ");
+        String newUserPhone = scanner.nextLine();
+
+        User newUser = new User(newUsername, newUserEmail, newUserPhone);
         users.add(newUser);
         System.out.println("User \"" + newUsername + "\" has been created successfully.");
     }
