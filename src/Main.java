@@ -21,6 +21,9 @@ public class Main {
         Trip trip1 = new Trip("Trip to Paris", "France", 10);
         agency1.addTrip(trip1);
 
+        Trip trip2 = new Trip("Trip to Warsaw", "Poland", 16);
+        agency1.addTrip(trip2);
+
         Reservation reservation1 = new Reservation(user1, agency1.getTrips().getFirst(), 6, false);
         agency1.addReservation(reservation1);
 
@@ -76,8 +79,19 @@ public class Main {
     public static void createAgency() {
         System.out.print("\nEnter the name of the new agency: ");
         String newAgencyName = scanner.nextLine();
+
+        boolean agencyExists = Utils.agencyExistsWithName(newAgencyName, agencies);
+
+        while (agencyExists) {
+            System.out.print("\nAgency with this name already exists, try a different one: ");
+            newAgencyName = scanner.nextLine();
+
+            agencyExists = Utils.agencyExistsWithName(newAgencyName, agencies);
+        }
+
         Agency newAgency = new Agency(newAgencyName);
         agencies.add(newAgency);
+
         System.out.println("Agency \"" + newAgencyName + "\" has been created successfully.");
     }
 
@@ -124,6 +138,19 @@ public class Main {
 
         int chosenTripIndex = Utils.renderSelectListAndChoose("Select a Trip", tripsWithFreeSeats);
         Trip chosenTrip = tripsWithFreeSeats.get(chosenTripIndex);
+
+        ArrayList<Reservation> usersReservations = chosenUser.getReservations();
+
+        boolean userHasReservation = Utils.userAlreadyHasReservation(usersReservations, chosenTrip);
+
+        while (userHasReservation) {
+            System.out.print("\nUser already has a reservation for this trip, chose another one.\n");
+
+            chosenTripIndex = Utils.renderSelectListAndChoose("Select a Trip", tripsWithFreeSeats);
+            chosenTrip = tripsWithFreeSeats.get(chosenTripIndex);
+
+            userHasReservation = Utils.userAlreadyHasReservation(usersReservations, chosenTrip);
+        }
 
         System.out.print("Enter the number of passengers (Free seats: " + chosenTrip.getFreeSeats() + "): ");
         int numberOfPassengers = scanner.nextInt();
@@ -200,9 +227,9 @@ public class Main {
 
         while (userExists) {
             System.out.print("\nUser with this email already exists, try a different one: ");
-            String newUserEmailUnique = scanner.nextLine();
+            newUserEmail = scanner.nextLine();
 
-            userExists = Utils.userExistsWithEmail(newUserEmailUnique, users);
+            userExists = Utils.userExistsWithEmail(newUserEmail, users);
         }
 
         System.out.print("\nEnter the phone number of the new user: ");

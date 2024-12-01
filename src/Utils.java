@@ -25,7 +25,28 @@ public class Utils {
 
     public static boolean userExistsWithEmail(String emailToCheck, ArrayList<User> users) {
         for (User user : users) {
-            if (user.getEmail().equals(emailToCheck)) {
+            if (user.getEmail().equalsIgnoreCase(emailToCheck)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean userAlreadyHasReservation(ArrayList<Reservation> usersReservations, Trip chosenTrip) {
+        for (Reservation reservation : usersReservations) {
+            if (reservation.getTrip().equals(chosenTrip)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // Agency
+    public static boolean agencyExistsWithName(String nameToCheck, ArrayList<Agency> agencies) {
+        for (Agency agency : agencies) {
+            if (agency.getName().equalsIgnoreCase(nameToCheck)) {
                 return true;
             }
         }
