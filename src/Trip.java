@@ -19,10 +19,6 @@ public class Trip {
         return freeSeats;
     }
 
-    public void setFreeSeats(int freeSeats) {
-        this.freeSeats = freeSeats;
-    }
-
     public void increaseFreeSeatsBy(int increaseBy) {
         freeSeats += increaseBy;
     }

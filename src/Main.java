@@ -263,8 +263,8 @@ public class Main {
 
             switch (chosenAction) {
                 case 1 -> showUserReservations(chosenUser);
-                case 2 -> payUserReservations(chosenUser);
-                case 3 -> cancelUserReservations(chosenUser);
+                case 2 -> payUserReservation(chosenUser);
+                case 3 -> cancelUserReservation(chosenUser);
                 case 4 -> {
                     System.out.println("Returning to the User Menu...");
                     showMenu = false;
@@ -281,7 +281,7 @@ public class Main {
         }
     }
 
-    public static void payUserReservations(User chosenUser) {
+    public static void payUserReservation(User chosenUser) {
         System.out.println("\n==== Pay a Reservation ====");
         ArrayList<Reservation> userReservations = chosenUser.getReservations();
 
@@ -292,7 +292,7 @@ public class Main {
         System.out.println("Reservation has been marked as paid.");
     }
 
-    public static void cancelUserReservations(User chosenUser) {
+    public static void cancelUserReservation(User chosenUser) {
         System.out.println("\n==== Cancel a Reservation ====");
         ArrayList<Reservation> userReservations = chosenUser.getReservations();
 
