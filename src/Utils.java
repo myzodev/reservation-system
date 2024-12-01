@@ -4,14 +4,17 @@ import java.util.Scanner;
 public class Utils {
     public static Scanner scanner = new Scanner(System.in);
 
+    // User
     public static int readIntFromUser(int min, int max) {
         while (true) {
             try {
                 int input = scanner.nextInt();
                 scanner.nextLine();
+
                 if (input >= min && input <= max) {
                     return input;
                 }
+
                 System.out.println("Please enter a number between " + min + " and " + max + ".");
             } catch (Exception e) {
                 System.out.println("Invalid input. Please enter a valid number.");
@@ -20,6 +23,17 @@ public class Utils {
         }
     }
 
+    public static boolean userExistsWithEmail(String emailToCheck, ArrayList<User> users) {
+        for (User user : users) {
+            if (user.getEmail().equals(emailToCheck)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // Menu list
     public static <T> void renderSelectList(String text, ArrayList<T> options) {
         System.out.println("\n==== " + text + " ====");
 
@@ -35,15 +49,5 @@ public class Utils {
         scanner.nextLine();
 
         return chosenIndex;
-    }
-
-    public static boolean userExistsWithEmail(String emailToCheck, ArrayList<User> users) {
-        for (User user : users) {
-            if (user.getEmail().equals(emailToCheck)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

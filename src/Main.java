@@ -210,6 +210,7 @@ public class Main {
 
         User newUser = new User(newUsername, newUserEmail, newUserPhone);
         users.add(newUser);
+
         System.out.println("User \"" + newUsername + "\" has been created successfully.");
     }
 
@@ -247,6 +248,7 @@ public class Main {
 
     public static void showUserReservations(User chosenUser) {
         System.out.println("\n==== Reservations for User: " + chosenUser.getName() + " ====");
+
         for (Reservation reservation : chosenUser.getReservations()) {
             System.out.println(reservation);
         }
