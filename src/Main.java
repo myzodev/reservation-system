@@ -7,8 +7,8 @@ import java.util.Scanner;
 
 public class Main {
     private static Scanner scanner;
-    private static ArrayList<Agency> agencies = new ArrayList<Agency>();
-    private static ArrayList<User> users = new ArrayList<User>();
+    private static ArrayList<Agency> agencies = new ArrayList<>();
+    private static ArrayList<User> users = new ArrayList<>();
 
     public static void main(String[] args) {
         initData();
@@ -84,6 +84,11 @@ public class Main {
         System.out.print("\nEnter the name of the new agency: ");
         String newAgencyName = scanner.nextLine();
 
+        if (newAgencyName == null || newAgencyName.trim().isEmpty()) {
+            System.out.println("\nAgency name cannot be empty.");
+            return;
+        }
+
         boolean agencyExists = Utils.agencyExistsWithName(newAgencyName, agencies);
 
         while (agencyExists) {
@@ -100,6 +105,11 @@ public class Main {
     }
 
     public static void chooseAgency() {
+        if (agencies.isEmpty()) {
+            System.out.println("\nNo agencies available. Please create an agency first.");
+            return;
+        }
+
         int chosenAgencyIndex = Utils.renderSelectListAndChoose("Select an Agency", agencies);
         Agency chosenAgency = agencies.get(chosenAgencyIndex);
 
@@ -136,6 +146,11 @@ public class Main {
     public static void createAgencyReservation(Agency chosenAgency) {
         ArrayList<Trip> tripsWithFreeSeats = chosenAgency.getTripsWithFreeSeats();
 
+        if (tripsWithFreeSeats.isEmpty()) {
+            System.out.println("\nNo trips with free seats available.");
+            return;
+        }
+
         System.out.println("\n==== Create a Reservation ====");
         int chosenUserIndex = Utils.renderSelectListAndChoose("Select a User", users);
         User chosenUser = users.get(chosenUserIndex);
@@ -148,7 +163,7 @@ public class Main {
         boolean userHasReservation = Utils.userAlreadyHasReservation(usersReservations, chosenTrip);
 
         while (userHasReservation) {
-            System.out.print("\nUser already has a reservation for this trip, chose another one.\n");
+            System.out.print("\nUser already has a reservation for this trip, choose another one.\n");
 
             chosenTripIndex = Utils.renderSelectListAndChoose("Select a Trip", tripsWithFreeSeats);
             chosenTrip = tripsWithFreeSeats.get(chosenTripIndex);
@@ -159,6 +174,11 @@ public class Main {
         System.out.print("Enter the number of passengers (Free seats: " + chosenTrip.getFreeSeats() + "): ");
         int numberOfPassengers = scanner.nextInt();
         scanner.nextLine();
+
+        if (numberOfPassengers > chosenTrip.getFreeSeats()) {
+            System.out.println("\nNot enough free seats available for this reservation.");
+            return;
+        }
 
         System.out.print("Would you like to pay now? (Y/n): ");
         String payNow = scanner.nextLine();
@@ -183,19 +203,44 @@ public class Main {
         int tripType = scanner.nextInt();
         scanner.nextLine();
 
+        if (tripType != 1 && tripType != 2) {
+            System.out.println("\nInvalid trip type selected.");
+            return;
+        }
+
         System.out.print("\nEnter the trip name: ");
         String newTripName = scanner.nextLine();
 
+        if (newTripName == null || newTripName.trim().isEmpty()) {
+            System.out.println("\nTrip name cannot be empty.");
+            return;
+        }
+
         System.out.print("Enter the trip destination: ");
         String newTripDestination = scanner.nextLine();
+
+        if (newTripDestination == null || newTripDestination.trim().isEmpty()) {
+            System.out.println("\nTrip destination cannot be empty.");
+            return;
+        }
 
         System.out.print("Enter the number of available seats: ");
         int newTripSeats = scanner.nextInt();
         scanner.nextLine();
 
+        if (newTripSeats <= 0) {
+            System.out.println("\nNumber of seats must be greater than zero.");
+            return;
+        }
+
         System.out.print("Enter the price of the ticket: ");
         int newTripTicketPrice = scanner.nextInt();
         scanner.nextLine();
+
+        if (newTripTicketPrice <= 0) {
+            System.out.println("\nTicket price must be greater than zero.");
+            return;
+        }
 
         Trip newTrip = null;
 
@@ -219,6 +264,11 @@ public class Main {
     }
 
     public static void showAgencyTrips(Agency chosenAgency) {
+        if (chosenAgency.getTrips().isEmpty()) {
+            System.out.println("\nNo trips available for this agency.");
+            return;
+        }
+
         System.out.println("\n==== Trips for Agency: " + chosenAgency.getName() + " ====");
         Utils.renderSelectList("Trips", chosenAgency.getTrips());
     }
@@ -250,8 +300,18 @@ public class Main {
         System.out.print("\nEnter the name of the new user: ");
         String newUsername = scanner.nextLine();
 
+        if (newUsername == null || newUsername.trim().isEmpty()) {
+            System.out.println("\nUser name cannot be empty.");
+            return;
+        }
+
         System.out.print("\nEnter the email of the new user: ");
         String newUserEmail = scanner.nextLine();
+
+        if (newUserEmail == null || newUserEmail.trim().isEmpty()) {
+            System.out.println("\nUser email cannot be empty.");
+            return;
+        }
 
         boolean userExists = Utils.userExistsWithEmail(newUserEmail, users);
 
@@ -272,6 +332,11 @@ public class Main {
     }
 
     public static void chooseUser() {
+        if (users.isEmpty()) {
+            System.out.println("\nNo users available. Please create a user first.");
+            return;
+        }
+
         int chosenUserIndex = Utils.renderSelectListAndChoose("Select a User", users);
         User chosenUser = users.get(chosenUserIndex);
 
@@ -304,30 +369,40 @@ public class Main {
     }
 
     public static void showUserReservations(User chosenUser) {
-        System.out.println("\n==== Reservations for User: " + chosenUser.getName() + " ====");
+        if (chosenUser.getReservations().isEmpty()) {
+            System.out.println("\nNo reservations found for this user.");
+            return;
+        }
 
+        System.out.println("\n==== Reservations for User: " + chosenUser.getName() + " ====");
         for (Reservation reservation : chosenUser.getReservations()) {
             System.out.println(reservation);
         }
     }
 
     public static void payUserReservation(User chosenUser) {
-        System.out.println("\n==== Pay a Reservation ====");
-        ArrayList<Reservation> userReservations = chosenUser.getReservations();
+        if (chosenUser.getReservations().isEmpty()) {
+            System.out.println("\nNo reservations found for this user.");
+            return;
+        }
 
-        int chosenReservationIndex = Utils.renderSelectListAndChoose("Select a Reservation to Pay", userReservations);
-        Reservation chosenReservation = userReservations.get(chosenReservationIndex);
+        System.out.println("\n==== Pay a Reservation ====");
+        int chosenReservationIndex = Utils.renderSelectListAndChoose("Select a Reservation to Pay", chosenUser.getReservations());
+        Reservation chosenReservation = chosenUser.getReservations().get(chosenReservationIndex);
 
         chosenReservation.setPaid(true);
         System.out.println("Reservation has been marked as paid.");
     }
 
     public static void cancelUserReservation(User chosenUser) {
-        System.out.println("\n==== Cancel a Reservation ====");
-        ArrayList<Reservation> userReservations = chosenUser.getReservations();
+        if (chosenUser.getReservations().isEmpty()) {
+            System.out.println("\nNo reservations found for this user.");
+            return;
+        }
 
-        int chosenReservationIndex = Utils.renderSelectListAndChoose("Select a Reservation to Cancel", userReservations);
-        Reservation chosenReservation = userReservations.get(chosenReservationIndex);
+        System.out.println("\n==== Cancel a Reservation ====");
+        int chosenReservationIndex = Utils.renderSelectListAndChoose("Select a Reservation to Cancel", chosenUser.getReservations());
+        Reservation chosenReservation = chosenUser.getReservations().get(chosenReservationIndex);
 
         chosenReservation.getAgency().removeReservation(chosenReservation);
         chosenUser.removeReservation(chosenReservation);
