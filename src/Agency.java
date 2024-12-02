@@ -1,3 +1,5 @@
+import trips.Trip;
+
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 

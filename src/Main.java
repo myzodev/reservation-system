@@ -1,3 +1,7 @@
+import trips.Trip;
+import trips.BoatTrip;
+import trips.FlightTrip;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -18,10 +22,10 @@ public class Main {
         User user1 = new User("Miro", "miro@email.com", "+421 000 000");
         users.add(user1);
 
-        Trip trip1 = new Trip("Trip to Paris", "France", 10);
+        Trip trip1 = new BoatTrip("Trip to Paris", "France", 10, 100, "Liberty");
         agency1.addTrip(trip1);
 
-        Trip trip2 = new Trip("Trip to Warsaw", "Poland", 16);
+        Trip trip2 = new FlightTrip("Trip to Warsaw", "Poland", 16, 120, "72D");
         agency1.addTrip(trip2);
 
         Reservation reservation1 = new Reservation(user1, agency1.getTrips().getFirst(), 6, false);
@@ -172,6 +176,13 @@ public class Main {
     }
 
     public static void createAgencyTrip(Agency chosenAgency) {
+        System.out.println("\nSelect trip type: ");
+        System.out.println("[1] Flight trip");
+        System.out.println("[2] Boat trip");
+
+        int tripType = scanner.nextInt();
+        scanner.nextLine();
+
         System.out.print("\nEnter the trip name: ");
         String newTripName = scanner.nextLine();
 
@@ -182,7 +193,26 @@ public class Main {
         int newTripSeats = scanner.nextInt();
         scanner.nextLine();
 
-        Trip newTrip = new Trip(newTripName, newTripDestination, newTripSeats);
+        System.out.print("Enter the price of the ticket: ");
+        int newTripTicketPrice = scanner.nextInt();
+        scanner.nextLine();
+
+        Trip newTrip = null;
+
+        if (tripType == 1) {
+            System.out.print("Enter the flight number: ");
+            String newTripFlightNumber = scanner.nextLine();
+
+            newTrip = new FlightTrip(newTripName, newTripDestination, newTripSeats, newTripTicketPrice, newTripFlightNumber);
+        }
+
+        if (tripType == 2) {
+            System.out.print("Enter the boat type: ");
+            String newTripBoatType = scanner.nextLine();
+
+            newTrip = new BoatTrip(newTripName, newTripDestination, newTripSeats, newTripTicketPrice, newTripBoatType);
+        }
+
         chosenAgency.addTrip(newTrip);
 
         System.out.println("Trip \"" + newTripName + "\" to " + newTripDestination + " has been created successfully.");

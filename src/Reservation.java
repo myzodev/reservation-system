@@ -1,3 +1,5 @@
+import trips.Trip;
+
 public class Reservation {
     private Agency agency;
     private User user;

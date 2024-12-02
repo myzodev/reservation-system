@@ -1,12 +1,16 @@
-public class Trip {
+package trips;
+
+public abstract class Trip {
     private String name;
     private String destination;
     private int freeSeats;
+    private int ticketPrice;
 
-    public Trip(String name, String destination, int freeSeats) {
+    public Trip(String name, String destination, int freeSeats, int ticketPrice) {
         this.name = name;
         this.destination = destination;
         this.freeSeats = freeSeats;
+        this.ticketPrice = ticketPrice;
     }
 
     // Name
@@ -30,6 +34,6 @@ public class Trip {
     // Other
     @Override
     public String toString() {
-        return name + ", destination: " + destination + ", free seats: " + freeSeats;
+        return name + ", destination: " + destination + ", free seats: " + freeSeats + ", ticket price: " + ticketPrice;
     }
 }
