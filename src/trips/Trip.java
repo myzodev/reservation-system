@@ -1,6 +1,8 @@
 package trips;
 
-public abstract class Trip {
+import java.io.Serializable;
+
+public abstract class Trip implements Serializable {
     private String name;
     private String destination;
     private int freeSeats;

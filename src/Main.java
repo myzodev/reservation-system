@@ -2,6 +2,7 @@ import trips.Trip;
 import trips.BoatTrip;
 import trips.FlightTrip;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -9,6 +10,9 @@ public class Main {
     private static Scanner scanner;
     private static ArrayList<Agency> agencies = new ArrayList<>();
     private static ArrayList<User> users = new ArrayList<>();
+
+    private static final String AGENCY_FILE = "agencies.dat";
+    private static final String USER_FILE = "users.dat";
 
     public static void main(String[] args) {
         initData();
@@ -34,6 +38,34 @@ public class Main {
         scanner = new Scanner(System.in);
     }
 
+    private static void saveData() {
+        try (ObjectOutputStream agencyOutputStream = new ObjectOutputStream(new FileOutputStream(AGENCY_FILE));
+             ObjectOutputStream userOutputStream = new ObjectOutputStream(new FileOutputStream(USER_FILE))) {
+
+            agencyOutputStream.writeObject(agencies);
+            userOutputStream.writeObject(users);
+
+            System.out.println("Data successfully saved to files.");
+        } catch (IOException e) {
+            System.out.println("Error saving data: " + e.getMessage());
+        }
+    }
+
+    private static void loadData() {
+        try (ObjectInputStream agencyInputStream = new ObjectInputStream(new FileInputStream(AGENCY_FILE));
+             ObjectInputStream userInputStream = new ObjectInputStream(new FileInputStream(USER_FILE))) {
+
+            agencies = (ArrayList<Agency>) agencyInputStream.readObject();
+            users = (ArrayList<User>) userInputStream.readObject();
+
+            System.out.println("Data successfully loaded from files.");
+        } catch (FileNotFoundException e) {
+            System.out.println("Data files not found. Starting with empty data.");
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error loading data: " + e.getMessage());
+        }
+    }
+
     public static void startApp() {
         boolean isRunning = true;
 
@@ -41,15 +73,19 @@ public class Main {
             System.out.println("\n==== Main Menu ====");
             System.out.println("[1] Agency Menu");
             System.out.println("[2] User Menu");
-            System.out.println("[3] Exit");
+            System.out.println("[3] Save Data");
+            System.out.println("[4] Load Data");
+            System.out.println("[5] Exit");
             System.out.print("Please choose an action: ");
 
-            int chosenAction = Utils.readIntFromUser(1, 3);
+            int chosenAction = Utils.readIntFromUser(1, 5);
 
             switch (chosenAction) {
                 case 1 -> showAgencyMenu();
                 case 2 -> showUserMenu();
-                case 3 -> {
+                case 3 -> saveData();
+                case 4 -> loadData();
+                case 5 -> {
                     System.out.println("Exiting the application. Goodbye!");
                     isRunning = false;
                 }

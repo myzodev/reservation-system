@@ -1,6 +1,8 @@
 import trips.Trip;
 
-public class Reservation {
+import java.io.Serializable;
+
+public class Reservation implements Serializable {
     private Agency agency;
     private User user;
     private Trip trip;

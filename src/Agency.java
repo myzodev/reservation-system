@@ -1,9 +1,10 @@
 import trips.Trip;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-public class Agency implements ReservationHandlers {
+public class Agency implements ReservationHandlers, Serializable {
     private String name;
     private ArrayList<Trip> trips = new ArrayList<Trip>();
     private ArrayList<Reservation> reservations = new ArrayList<Reservation>();

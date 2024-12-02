@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class User implements ReservationHandlers {
+public class User implements ReservationHandlers, Serializable {
     private String name;
     private String email;
     private String phone;
