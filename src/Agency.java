@@ -6,11 +6,22 @@ import java.util.stream.Collectors;
 
 public class Agency implements ReservationHandlers, Serializable {
     private String name;
-    private ArrayList<Trip> trips = new ArrayList<Trip>();
-    private ArrayList<Reservation> reservations = new ArrayList<Reservation>();
+    private ArrayList<Trip> trips = new ArrayList<>();
+    private ArrayList<Reservation> reservations = new ArrayList<>();
+    private static ArrayList<Agency> agencies = new ArrayList<>();
 
     public Agency(String name) {
         this.name = name;
+        agencies.add(this);
+    }
+
+    // Agencies
+    public static ArrayList<Agency> getAgencies() {
+        return agencies;
+    }
+
+    public static void setAgencies(ArrayList<Agency> newAgencies) {
+        agencies = newAgencies;
     }
 
     // Name
@@ -53,15 +64,14 @@ public class Agency implements ReservationHandlers, Serializable {
 
     public void removeReservation(Reservation reservationToRemove) {
         reservations.removeIf(reservation -> {
-            if (reservation == reservationToRemove) {
-                Trip reservationTrip = reservation.getTrip();
-                int reservationReservedSeats = reservation.getNumberOfPassengers();
-                System.out.println(reservationReservedSeats);
-                reservationTrip.increaseFreeSeatsBy(reservationReservedSeats);
-                return true;
-            }
+            if (reservation != reservationToRemove) return false;
 
-            return false;
+            Trip reservationTrip = reservation.getTrip();
+
+            int reservationReservedSeats = reservation.getNumberOfPassengers();
+            reservationTrip.increaseFreeSeatsBy(reservationReservedSeats);
+
+            return true;
         });
     }
 
