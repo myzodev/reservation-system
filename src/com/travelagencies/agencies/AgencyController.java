@@ -244,7 +244,12 @@ public class AgencyController {
         ArrayList<Trip> allTrips = new ArrayList<>();
 
         for (Agency agency : Agency.getAgencies()) {
-            allTrips.addAll(agency.getTrips());
+            allTrips.addAll(agency.getTripsWithFreeSeats());
+        }
+
+        if (allTrips.isEmpty()) {
+            System.out.println("\nNo trips available.");
+            return;
         }
 
         ArrayList<String> destinations = new ArrayList<>();
