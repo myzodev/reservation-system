@@ -1,9 +1,11 @@
 package com.travelagencies.interfaces;
 
+import com.travelagencies.reservations.Reservation;
+
 import java.util.ArrayList;
 
 public interface ReservationHandlers {
-    ArrayList<com.travelagencies.reservations.Reservation> getReservations();
-    void addReservation(com.travelagencies.reservations.Reservation newReservation);
-    void removeReservation(com.travelagencies.reservations.Reservation reservationToRemove);
+    ArrayList<Reservation> getReservations();
+    void addReservation(Reservation newReservation);
+    void removeReservation(Reservation reservationToRemove);
 }
