@@ -26,7 +26,7 @@ public class Main {
             int chosenAction = Utils.readIntFromUser(1, 6);
 
             switch (chosenAction) {
-                case 1 -> AgencyController.showAllTrips();
+                case 1 -> AgencyController.quickReservation();
                 case 2 -> AgencyController.showAgencyMenu();
                 case 3 -> UserController.showUserMenu();
                 case 4 -> DataManager.saveData();

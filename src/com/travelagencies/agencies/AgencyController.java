@@ -240,7 +240,7 @@ public class AgencyController {
         Utils.renderSelectList("Trips", chosenAgency.getTrips());
     }
 
-    public static void showAllTrips() {
+    public static void quickReservation() {
         ArrayList<Trip> allTrips = new ArrayList<>();
 
         for (Agency agency : Agency.getAgencies()) {
