@@ -119,8 +119,7 @@ public class AgencyController {
             return;
         }
 
-        System.out.println("\n==== Create a Reservation ====");
-        int chosenUserIndex = Utils.renderSelectListAndChoose("Select a User", User.getUsers());
+        int chosenUserIndex = Utils.renderSelectListAndChoose("Select a user to create reservation for", User.getUsers());
         User chosenUser = User.getUsers().get(chosenUserIndex);
 
         int chosenTripIndex = Utils.renderSelectListAndChoose("Select a Trip", tripsWithFreeSeats);
@@ -239,5 +238,76 @@ public class AgencyController {
 
         System.out.println("\n==== Trips for Agency: " + chosenAgency.getName() + " ====");
         Utils.renderSelectList("Trips", chosenAgency.getTrips());
+    }
+
+    public static void showAllTrips() {
+        ArrayList<Trip> allTrips = new ArrayList<>();
+
+        for (Agency agency : Agency.getAgencies()) {
+            allTrips.addAll(agency.getTrips());
+        }
+
+        ArrayList<String> destinations = new ArrayList<>();
+
+        for (Trip trip: allTrips) {
+            if (destinations.contains(trip.getDestination())) continue;
+            destinations.add(trip.getDestination());
+        }
+
+        int destinationIndex = Utils.renderSelectListAndChoose("Choose destination you want to visit", destinations);
+        String chosenDestination = destinations.get(destinationIndex);
+
+        System.out.print("Enter your max price: ");
+        int maxPriceRange = scanner.nextInt();
+        scanner.nextLine();
+
+        ArrayList<Trip> filteredTrips = new ArrayList<>();
+
+        for (Trip trip : allTrips) {
+            if (trip.getDestination().equals(chosenDestination) && trip.getTicketPrice() <= maxPriceRange) {
+                filteredTrips.add(trip);
+            }
+        }
+
+        int tripIndex = Utils.renderSelectListAndChoose("Select a trip", filteredTrips);
+        Trip chosenTrip = filteredTrips.get(tripIndex);
+
+        System.out.println(chosenTrip.getName());
+
+       Agency chosenTripAgency = chosenTrip.getAgency();
+
+        int chosenUserIndex = Utils.renderSelectListAndChoose("Select a user to create reservation for", User.getUsers());
+        User chosenUser = User.getUsers().get(chosenUserIndex);
+
+        ArrayList<Reservation> usersReservations = chosenUser.getReservations();
+
+        boolean userHasReservation = Utils.userAlreadyHasReservation(usersReservations, chosenTrip);
+
+        while (userHasReservation) {
+            System.out.print("\nUser already has a reservation for this trip, choose another one.\n");
+
+            tripIndex = Utils.renderSelectListAndChoose("Select a trip", filteredTrips);
+            chosenTrip = allTrips.get(tripIndex);
+
+            userHasReservation = Utils.userAlreadyHasReservation(usersReservations, chosenTrip);
+        }
+
+        System.out.print("Enter the number of passengers (Free seats: " + chosenTrip.getFreeSeats() + "): ");
+        int numberOfPassengers = scanner.nextInt();
+        scanner.nextLine();
+
+        if (numberOfPassengers > chosenTrip.getFreeSeats()) {
+            System.out.println("\nNot enough free seats available for this reservation.");
+            return;
+        }
+
+        System.out.print("Would you like to pay now? (Y/n): ");
+        String payNow = scanner.nextLine();
+        boolean isReservationPaid = payNow.equalsIgnoreCase("Y");
+
+        Reservation newReservation = new Reservation(chosenUser, chosenTrip, numberOfPassengers, isReservationPaid);
+        chosenTripAgency.addReservation(newReservation);
+
+        System.out.println("Reservation successfully created for \"" + chosenUser.getName() + "\".");
     }
 }

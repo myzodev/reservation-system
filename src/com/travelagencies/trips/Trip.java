@@ -1,8 +1,11 @@
 package com.travelagencies.trips;
 
+import com.travelagencies.agencies.Agency;
+
 import java.io.Serializable;
 
 public abstract class Trip implements Serializable {
+    private Agency agency;
     private String name;
     private String destination;
     private int freeSeats;
@@ -15,9 +18,23 @@ public abstract class Trip implements Serializable {
         this.ticketPrice = ticketPrice;
     }
 
+    // Agency
+    public Agency getAgency() {
+        return agency;
+    }
+
+    public void setAgency(Agency agency) {
+        this.agency = agency;
+    }
+
     // Name
     public String getName() {
         return name;
+    }
+
+    // Destination
+    public String getDestination() {
+        return destination;
     }
 
     // Seats
@@ -31,6 +48,12 @@ public abstract class Trip implements Serializable {
 
     public void reduceFreeSeatsBy(int reduceBy) {
         freeSeats -= reduceBy;
+    }
+
+
+    // Ticket price
+    public int getTicketPrice() {
+        return ticketPrice;
     }
 
     // Other

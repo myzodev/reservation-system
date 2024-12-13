@@ -15,21 +15,23 @@ public class Main {
 
         while (isRunning) {
             System.out.println("\n==== Main Menu ====");
-            System.out.println("[1] Agency Menu");
-            System.out.println("[2] User Menu");
-            System.out.println("[3] Save Data");
-            System.out.println("[4] Load Data");
-            System.out.println("[5] Exit");
+            System.out.println("[1] List all trips");
+            System.out.println("[2] Agency Menu");
+            System.out.println("[3] User Menu");
+            System.out.println("[4] Save Data");
+            System.out.println("[5] Load Data");
+            System.out.println("[6] Exit");
             System.out.print("Please choose an action: ");
 
-            int chosenAction = Utils.readIntFromUser(1, 5);
+            int chosenAction = Utils.readIntFromUser(1, 6);
 
             switch (chosenAction) {
-                case 1 -> AgencyController.showAgencyMenu();
-                case 2 -> UserController.showUserMenu();
-                case 3 -> DataManager.saveData();
-                case 4 -> DataManager.loadData();
-                case 5 -> {
+                case 1 -> AgencyController.showAllTrips();
+                case 2 -> AgencyController.showAgencyMenu();
+                case 3 -> UserController.showUserMenu();
+                case 4 -> DataManager.saveData();
+                case 5 -> DataManager.loadData();
+                case 6-> {
                     System.out.println("\nExiting the application. Goodbye!");
                     isRunning = false;
                 }

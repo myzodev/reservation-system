@@ -50,6 +50,11 @@ public class DataManager {
         Reservation reservation1 = new Reservation(user1, agency1.getTrips().getFirst(), 6, false);
         agency1.addReservation(reservation1);
 
+        Trip trip1_2 = new BoatTrip("Another Paris Adventure", "France", 5, 150, "Voyager");
+        agency1.addTrip(trip1_2);
+        Trip trip2_2 = new FlightTrip("Visit to Krakow", "Poland", 20, 130, "14B");
+        agency1.addTrip(trip2_2);
+
         Agency agency2 = new Agency("Dream Ventures");
         User user2 = new User("Eva", "eva@email.com", "+421 111 111");
         Trip trip3 = new BoatTrip("Mediterranean Adventure", "Italy", 7, 200, "Queen");
@@ -59,6 +64,11 @@ public class DataManager {
         Reservation reservation2 = new Reservation(user2, agency2.getTrips().getFirst(), 4, true);
         agency2.addReservation(reservation2);
 
+        Trip trip3_2 = new BoatTrip("Venetian Delights", "Italy", 10, 180, "Siren");
+        agency2.addTrip(trip3_2);
+        Trip trip4_2 = new FlightTrip("Weekend in Rotterdam", "Netherlands", 8, 140, "32C");
+        agency2.addTrip(trip4_2);
+
         Agency agency3 = new Agency("Sky Explorers");
         User user3 = new User("Peter", "peter@email.com", "+421 222 222");
         Trip trip5 = new BoatTrip("Caribbean Escape", "Jamaica", 12, 250, "Oceanic");
@@ -67,6 +77,11 @@ public class DataManager {
         agency3.addTrip(trip6);
         Reservation reservation3 = new Reservation(user3, agency3.getTrips().getFirst(), 8, false);
         agency3.addReservation(reservation3);
+
+        Trip trip5_2 = new BoatTrip("Jamaican Paradise", "Jamaica", 14, 270, "Tropical");
+        agency3.addTrip(trip5_2);
+        Trip trip6_2 = new FlightTrip("Kyoto Experience", "Japan", 18, 200, "21D");
+        agency3.addTrip(trip6_2);
 
         Reservation reservation4 = new Reservation(user2, agency2.getTrips().get(1), 2, true);
         agency2.addReservation(reservation4);

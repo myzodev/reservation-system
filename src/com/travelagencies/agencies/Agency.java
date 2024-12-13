@@ -45,6 +45,7 @@ public class Agency implements ReservationHandlers, Serializable {
     }
 
     public void addTrip(Trip newTrip) {
+        newTrip.setAgency(this);
         trips.add(newTrip);
     }
 
