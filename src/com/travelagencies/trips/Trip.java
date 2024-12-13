@@ -1,4 +1,4 @@
-package trips;
+package com.travelagencies.trips;
 
 import java.io.Serializable;
 

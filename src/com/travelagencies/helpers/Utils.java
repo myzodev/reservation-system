@@ -1,4 +1,9 @@
-import trips.Trip;
+package com.travelagencies.helpers;
+
+import com.travelagencies.agencies.Agency;
+import com.travelagencies.users.User;
+import com.travelagencies.trips.Trip;
+import com.travelagencies.reservations.Reservation;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -56,7 +61,7 @@ public class Utils {
         return false;
     }
 
-    // Menu list
+    // Menu
     public static <T> void renderSelectList(String text, ArrayList<T> options) {
         System.out.println("\n==== " + text + " ====");
 
@@ -72,5 +77,9 @@ public class Utils {
         scanner.nextLine();
 
         return chosenIndex;
+    }
+
+    public static boolean checkEmptyString(String text) {
+        return text.trim().isEmpty();
     }
 }

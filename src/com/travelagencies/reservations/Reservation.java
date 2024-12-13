@@ -1,4 +1,8 @@
-import trips.Trip;
+package com.travelagencies.reservations;
+
+import com.travelagencies.agencies.Agency;
+import com.travelagencies.trips.Trip;
+import com.travelagencies.users.User;
 
 import java.io.Serializable;
 

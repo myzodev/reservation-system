@@ -1,75 +1,15 @@
-import trips.Trip;
-import trips.BoatTrip;
-import trips.FlightTrip;
+package com.travelagencies.agencies;
 
-import java.io.*;
+import com.travelagencies.trips.*;
+import com.travelagencies.users.User;
+import com.travelagencies.reservations.Reservation;
+import com.travelagencies.helpers.Utils;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Main {
-    private static Scanner scanner;
-
-    private static final String AGENCY_FILE = "agencies.dat";
-    private static final String USER_FILE = "users.dat";
-
-    public static void main(String[] args) {
-        startApp();
-    }
-
-    private static void saveData() {
-        try (ObjectOutputStream agencyOutputStream = new ObjectOutputStream(new FileOutputStream(AGENCY_FILE));
-             ObjectOutputStream userOutputStream = new ObjectOutputStream(new FileOutputStream(USER_FILE))) {
-
-            agencyOutputStream.writeObject(Agency.getAgencies());
-            userOutputStream.writeObject(User.getUsers());
-
-            System.out.println("\nData successfully saved to files.");
-        } catch (IOException e) {
-            System.out.println("\nError saving data: " + e.getMessage());
-        }
-    }
-
-    private static void loadData() {
-        try (ObjectInputStream agencyInputStream = new ObjectInputStream(new FileInputStream(AGENCY_FILE));
-             ObjectInputStream userInputStream = new ObjectInputStream(new FileInputStream(USER_FILE))) {
-
-            Agency.setAgencies((ArrayList<Agency>) agencyInputStream.readObject());
-            User.setUsers((ArrayList<User>) userInputStream.readObject());
-
-            System.out.println("\nData successfully loaded from files.");
-        } catch (FileNotFoundException e) {
-            System.out.println("\nData files not found. Starting with empty data.");
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("\nError loading data: " + e.getMessage());
-        }
-    }
-
-    public static void startApp() {
-        boolean isRunning = true;
-
-        while (isRunning) {
-            System.out.println("\n==== Main Menu ====");
-            System.out.println("[1] Agency Menu");
-            System.out.println("[2] User Menu");
-            System.out.println("[3] Save Data");
-            System.out.println("[4] Load Data");
-            System.out.println("[5] Exit");
-            System.out.print("Please choose an action: ");
-
-            int chosenAction = Utils.readIntFromUser(1, 5);
-
-            switch (chosenAction) {
-                case 1 -> showAgencyMenu();
-                case 2 -> showUserMenu();
-                case 3 -> saveData();
-                case 4 -> loadData();
-                case 5 -> {
-                    System.out.println("\nExiting the application. Goodbye!");
-                    isRunning = false;
-                }
-            }
-        }
-    }
+public class AgencyController {
+    private static Scanner scanner = new Scanner(System.in);
 
     public static void showAgencyMenu() {
         boolean showMenu = true;
@@ -109,9 +49,13 @@ public class Main {
         System.out.print("\nEnter the name of the new agency: ");
         String newAgencyName = scanner.nextLine();
 
-        if (newAgencyName == null || newAgencyName.trim().isEmpty()) {
-            System.out.println("\nAgency name cannot be empty.");
-            return;
+        boolean emptyName = Utils.checkEmptyString(newAgencyName);
+
+        while (emptyName) {
+            System.out.print("\nAgency name cannot be empty:");
+            newAgencyName = scanner.nextLine();
+
+            emptyName = Utils.checkEmptyString(newAgencyName);
         }
 
         boolean agencyExists = Utils.agencyExistsWithName(newAgencyName, Agency.getAgencies());
@@ -295,151 +239,5 @@ public class Main {
 
         System.out.println("\n==== Trips for Agency: " + chosenAgency.getName() + " ====");
         Utils.renderSelectList("Trips", chosenAgency.getTrips());
-    }
-
-    public static void showUserMenu() {
-        boolean showMenu = true;
-
-        while (showMenu) {
-            System.out.println("\n==== User Menu ====");
-            System.out.println("[1] Show all users");
-            System.out.println("[2] Create a User");
-            System.out.println("[3] Choose a User");
-            System.out.println("[4] Back to Main Menu");
-            System.out.print("Please choose an action: ");
-
-            int chosenAction = Utils.readIntFromUser(1, 4);
-
-            switch (chosenAction) {
-                case 1 -> showAllUsers();
-                case 2 -> createUser();
-                case 3 -> chooseUser();
-                case 4 -> {
-                    System.out.println("Returning to the Main Menu...");
-                    showMenu = false;
-                }
-            }
-        }
-    }
-
-    public static void showAllUsers() {
-        if (User.getUsers().isEmpty()) {
-            System.out.println("\nNo users available. Please create a user first.");
-            return;
-        }
-
-        Utils.renderSelectList("List of users", User.getUsers());
-    }
-
-    public static void createUser() {
-        System.out.print("\nEnter the name of the new user: ");
-        String newUsername = scanner.nextLine();
-
-        if (newUsername == null || newUsername.trim().isEmpty()) {
-            System.out.println("\nUser name cannot be empty.");
-            return;
-        }
-
-        System.out.print("\nEnter the email of the new user: ");
-        String newUserEmail = scanner.nextLine();
-
-        if (newUserEmail == null || newUserEmail.trim().isEmpty()) {
-            System.out.println("\nUser email cannot be empty.");
-            return;
-        }
-
-        boolean userExists = Utils.userExistsWithEmail(newUserEmail, User.getUsers());
-
-        while (userExists) {
-            System.out.print("\nUser with this email already exists, try a different one: ");
-            newUserEmail = scanner.nextLine();
-
-            userExists = Utils.userExistsWithEmail(newUserEmail, User.getUsers());
-        }
-
-        System.out.print("\nEnter the phone number of the new user: ");
-        String newUserPhone = scanner.nextLine();
-
-        new User(newUsername, newUserEmail, newUserPhone);
-
-        System.out.println("User \"" + newUsername + "\" has been created successfully.");
-    }
-
-    public static void chooseUser() {
-        if (User.getUsers().isEmpty()) {
-            System.out.println("\nNo users available. Please create a user first.");
-            return;
-        }
-
-        int chosenUserIndex = Utils.renderSelectListAndChoose("Select a User", User.getUsers());
-        User chosenUser = User.getUsers().get(chosenUserIndex);
-
-        showUserSubmenu(chosenUser);
-    }
-
-    public static void showUserSubmenu(User chosenUser) {
-        boolean showMenu = true;
-
-        while (showMenu) {
-            System.out.println("\n==== User Submenu: " + chosenUser.getName() + " ====");
-            System.out.println("[1] Show Reservations");
-            System.out.println("[2] Pay a Reservation");
-            System.out.println("[3] Cancel a Reservation");
-            System.out.println("[4] Back to User Menu");
-            System.out.print("Please choose an action: ");
-
-            int chosenAction = Utils.readIntFromUser(1, 4);
-
-            switch (chosenAction) {
-                case 1 -> showUserReservations(chosenUser);
-                case 2 -> payUserReservation(chosenUser);
-                case 3 -> cancelUserReservation(chosenUser);
-                case 4 -> {
-                    System.out.println("Returning to the User Menu...");
-                    showMenu = false;
-                }
-            }
-        }
-    }
-
-    public static void showUserReservations(User chosenUser) {
-        if (chosenUser.getReservations().isEmpty()) {
-            System.out.println("\nNo reservations found for this user.");
-            return;
-        }
-
-        System.out.println("\n==== Reservations for User: " + chosenUser.getName() + " ====");
-
-        for (Reservation reservation : chosenUser.getReservations()) {
-            System.out.println(reservation);
-        }
-    }
-
-    public static void payUserReservation(User chosenUser) {
-        if (chosenUser.getReservations().isEmpty()) {
-            System.out.println("\nNo reservations found for this user.");
-            return;
-        }
-
-        int chosenReservationIndex = Utils.renderSelectListAndChoose("Select a Reservation to Pay", chosenUser.getReservations());
-        Reservation chosenReservation = chosenUser.getReservations().get(chosenReservationIndex);
-
-        chosenReservation.setPaid(true);
-        System.out.println("\nReservation has been marked as paid.");
-    }
-
-    public static void cancelUserReservation(User chosenUser) {
-        if (chosenUser.getReservations().isEmpty()) {
-            System.out.println("\nNo reservations found for this user.");
-            return;
-        }
-
-        int chosenReservationIndex = Utils.renderSelectListAndChoose("Select a Reservation to Cancel", chosenUser.getReservations());
-        Reservation chosenReservation = chosenUser.getReservations().get(chosenReservationIndex);
-
-        chosenReservation.getAgency().removeReservation(chosenReservation);
-        chosenUser.removeReservation(chosenReservation);
-
-        System.out.println("\nReservation has been canceled successfully.");
     }
 }

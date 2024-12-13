@@ -1,3 +1,8 @@
+package com.travelagencies.users;
+
+import com.travelagencies.reservations.Reservation;
+import com.travelagencies.interfaces.ReservationHandlers;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -17,7 +22,7 @@ public class User implements ReservationHandlers, Serializable {
         users.add(this);
     }
 
-    // User
+    // users.User
     public static ArrayList<User> getUsers() {
         return users;
     }

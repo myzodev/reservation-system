@@ -1,4 +1,4 @@
-package trips;
+package com.travelagencies.trips;
 
 public class BoatTrip extends Trip {
     private String boatName;

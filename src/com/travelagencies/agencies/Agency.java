@@ -1,4 +1,8 @@
-import trips.Trip;
+package com.travelagencies.agencies;
+
+import com.travelagencies.trips.Trip;
+import com.travelagencies.reservations.Reservation;
+import com.travelagencies.interfaces.ReservationHandlers;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -7,7 +11,7 @@ import java.util.stream.Collectors;
 public class Agency implements ReservationHandlers, Serializable {
     private String name;
     private ArrayList<Trip> trips = new ArrayList<>();
-    private ArrayList<Reservation> reservations = new ArrayList<>();
+    private ArrayList<com.travelagencies.reservations.Reservation> reservations = new ArrayList<>();
     private static ArrayList<Agency> agencies = new ArrayList<>();
 
     public Agency(String name) {
@@ -45,7 +49,7 @@ public class Agency implements ReservationHandlers, Serializable {
     }
 
     // Reservations
-    public ArrayList<Reservation> getReservations() {
+    public ArrayList<com.travelagencies.reservations.Reservation> getReservations() {
         return reservations;
     }
 
